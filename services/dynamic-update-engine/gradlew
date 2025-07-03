@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "Gradle wrapper not fully configured."
+echo "Please run: gradle wrapper --gradle-version 8.5 --distribution-type all"
+echo "Or download gradle and run the wrapper task."

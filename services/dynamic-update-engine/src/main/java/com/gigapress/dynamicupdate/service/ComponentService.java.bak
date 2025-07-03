@@ -1,0 +1,218 @@
+package com.gigapress.dynamicupdate.service;
+import com.gigapress.dynamicupdate.exception.ComponentNotFoundException;
+import com.gigapress.dynamicupdate.exception.CircularDependencyException;
+
+import com.gigapress.dynamicupdate.domain.*;
+import com.gigapress.dynamicupdate.event.ComponentUpdateEvent;
+import com.gigapress.dynamicupdate.event.DependencyChangeEvent;
+import com.gigapress.dynamicupdate.event.UpdatePropagationEvent;
+import com.gigapress.dynamicupdate.repository.ComponentRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class ComponentService {
+    
+    private final ComponentRepository componentRepository;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+    
+    private static final String COMPONENT_UPDATE_TOPIC = "component.changes";
+    private static final String DEPENDENCY_CHANGE_TOPIC = "dependency.events";
+    private static final String UPDATE_PROPAGATION_TOPIC = "update.propagation";
+    
+    @Transactional
+    public Component createComponent(Component component) {
+        component.setCreatedAt(LocalDateTime.now());
+        component.setUpdatedAt(LocalDateTime.now());
+        component.setStatus(ComponentStatus.ACTIVE);
+        
+        Component saved = componentRepository.save(component);
+        
+        // Publish component creation event
+        publishComponentUpdate(saved, ComponentUpdateEvent.UpdateType.CREATE, null);
+        
+        log.info("Created component: {}", saved.getComponentId());
+        return saved;
+    }
+    
+    @Cacheable(value = "components", key = "#componentId")
+    public Optional<Component> findByComponentId(String componentId) {
+        return componentRepository.findByComponentIdWithDependencies(componentId);
+    }
+    
+    public List<Component> findByProjectId(String projectId) {
+        return componentRepository.findByProjectId(projectId);
+    }
+    
+    @Transactional
+    @CacheEvict(value = "components", allEntries = true)
+    public Component updateComponent(String componentId, Map<String, Object> updates) {
+        Component component = componentRepository.findByComponentId(componentId)
+                .orElseThrow(() -> new ComponentNotFoundException(componentId));
+        
+        String previousVersion = component.getVersion();
+        
+        // Apply updates
+        if (updates.containsKey("version")) {
+            component.setVersion((String) updates.get("version"));
+        }
+        if (updates.containsKey("status")) {
+            component.setStatus(ComponentStatus.valueOf((String) updates.get("status")));
+        }
+        if (updates.containsKey("metadata")) {
+            component.setMetadata((String) updates.get("metadata"));
+        }
+        
+        component.setUpdatedAt(LocalDateTime.now());
+        Component saved = componentRepository.save(component);
+        
+        // Publish update event
+        publishComponentUpdate(saved, ComponentUpdateEvent.UpdateType.UPDATE, previousVersion);
+        
+        // Check if update requires propagation
+        if (shouldPropagateUpdate(updates)) {
+            propagateUpdate(saved, updates);
+        }
+        
+        return saved;
+    }
+    
+    @Transactional
+    @CacheEvict(value = "components", allEntries = true)
+    public void addDependency(String sourceId, String targetId, DependencyType type) {
+        Component source = componentRepository.findByComponentId(sourceId)
+                .orElseThrow(() -> new RuntimeException("Source component not found: " + sourceId));
+        Component target = componentRepository.findByComponentId(targetId)
+                .orElseThrow(() -> new RuntimeException("Target component not found: " + targetId));
+        
+        // Check for circular dependency
+        if (target.hasCircularDependency(source)) {
+            throw new CircularDependencyException(sourceId, targetId);
+        }
+        
+        source.addDependency(target, type);
+        componentRepository.save(source);
+        
+        // Publish dependency change event
+        publishDependencyChange(sourceId, targetId, type, DependencyChangeEvent.ChangeType.ADDED);
+        
+        log.info("Added dependency: {} -> {}", sourceId, targetId);
+    }
+    
+    @Cacheable(value = "dependencies", key = "#componentId")
+    public Set<Component> getDirectDependencies(String componentId) {
+        return componentRepository.findByComponentIdWithDependencies(componentId)
+                .map(component -> component.getDependencies().stream()
+                        .map(Dependency::getTarget)
+                        .collect(Collectors.toSet()))
+                .orElse(new HashSet<>());
+    }
+    
+    @Cacheable(value = "dependents", key = "#componentId")
+    public Set<Component> getDirectDependents(String componentId) {
+        return componentRepository.findDependents(componentId);
+    }
+    
+    public Set<Component> getAllAffectedComponents(String componentId) {
+        Set<Component> affected = new HashSet<>();
+        Set<String> visited = new HashSet<>();
+        
+        collectAffectedComponents(componentId, affected, visited);
+        
+        return affected;
+    }
+    
+    private void collectAffectedComponents(String componentId, Set<Component> affected, Set<String> visited) {
+        if (visited.contains(componentId)) {
+            return;
+        }
+        
+        visited.add(componentId);
+        Set<Component> dependents = componentRepository.findDependents(componentId);
+        
+        for (Component dependent : dependents) {
+            affected.add(dependent);
+            collectAffectedComponents(dependent.getComponentId(), affected, visited);
+        }
+    }
+    
+    private void propagateUpdate(Component component, Map<String, Object> updates) {
+        Set<Component> affected = getAllAffectedComponents(component.getComponentId());
+        
+        if (!affected.isEmpty()) {
+            UpdatePropagationEvent event = UpdatePropagationEvent.builder()
+                    .eventId(UUID.randomUUID().toString())
+                    .triggerComponentId(component.getComponentId())
+                    .projectId(component.getProjectId())
+                    .affectedComponentIds(affected.stream()
+                            .map(Component::getComponentId)
+                            .collect(Collectors.toList()))
+                    .propagationType(UpdatePropagationEvent.PropagationType.CASCADE)
+                    .updateDetails(updates)
+                    .timestamp(LocalDateTime.now())
+                    .propagationDepth(calculatePropagationDepth(component.getComponentId(), affected))
+                    .build();
+            
+            kafkaTemplate.send(UPDATE_PROPAGATION_TOPIC, event);
+            log.info("Propagating update from {} to {} components", component.getComponentId(), affected.size());
+        }
+    }
+    
+    private boolean shouldPropagateUpdate(Map<String, Object> updates) {
+        // Define rules for when updates should propagate
+        return updates.containsKey("version") || 
+               updates.containsKey("status") ||
+               updates.containsKey("breaking_change");
+    }
+    
+    private int calculatePropagationDepth(String componentId, Set<Component> affected) {
+        // Calculate maximum depth of propagation
+        int maxDepth = 0;
+        for (Component component : affected) {
+            Optional<Object> path = componentRepository.findDependencyPath(component.getComponentId(), componentId);
+            if (path.isPresent()) {
+                // Parse path length (simplified)
+                maxDepth = Math.max(maxDepth, 1); // Placeholder
+            }
+        }
+        return maxDepth;
+    }
+    
+    private void publishComponentUpdate(Component component, ComponentUpdateEvent.UpdateType type, String previousVersion) {
+        ComponentUpdateEvent event = ComponentUpdateEvent.builder()
+                .eventId(UUID.randomUUID().toString())
+                .componentId(component.getComponentId())
+                .projectId(component.getProjectId())
+                .updateType(type)
+                .previousVersion(previousVersion)
+                .newVersion(component.getVersion())
+                .timestamp(LocalDateTime.now())
+                .build();
+        
+        kafkaTemplate.send(COMPONENT_UPDATE_TOPIC, event);
+    }
+    
+    private void publishDependencyChange(String sourceId, String targetId, DependencyType type, DependencyChangeEvent.ChangeType changeType) {
+        DependencyChangeEvent event = DependencyChangeEvent.builder()
+                .eventId(UUID.randomUUID().toString())
+                .sourceComponentId(sourceId)
+                .targetComponentId(targetId)
+                .changeType(changeType)
+                .dependencyType(type)
+                .timestamp(LocalDateTime.now())
+                .build();
+        
+        kafkaTemplate.send(DEPENDENCY_CHANGE_TOPIC, event);
+    }
+}

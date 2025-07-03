@@ -1,0 +1,43 @@
+pipeline {
+    agent {{ agent }}
+    
+    {% if environment %}
+    environment {
+        {% for key, value in environment.items() %}
+        {{ key }} = '{{ value }}'
+        {% endfor %}
+    }
+    {% endif %}
+    
+    {% if options %}
+    options {
+        {% for option in options %}
+        {{ option }}
+        {% endfor %}
+    }
+    {% endif %}
+    
+    stages {
+        {% for stage in stages %}
+        stage('{{ stage.name }}') {
+            steps {
+                {% for step in stage.steps %}
+                {{ step }}
+                {% endfor %}
+            }
+        }
+        {% endfor %}
+    }
+    
+    post {
+        always {
+            echo 'Pipeline completed'
+        }
+        success {
+            echo 'Pipeline succeeded'
+        }
+        failure {
+            echo 'Pipeline failed'
+        }
+    }
+}

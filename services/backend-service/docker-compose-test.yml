@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  backend-service:
+    build: .
+    container_name: gigapress-backend-service
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - SPRING_DATA_REDIS_HOST=redis
+      - SERVICE_MCP_SERVER_URL=http://mcp-server:8082
+      - SERVICE_DOMAIN_SCHEMA_URL=http://domain-schema-service:8083
+      - SERVICE_DYNAMIC_UPDATE_URL=http://dynamic-update-engine:8081
+    depends_on:
+      - kafka
+      - redis
+    networks:
+      - gigapress-network
+
+networks:
+  gigapress-network:
+    external: true

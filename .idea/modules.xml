@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/backend-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/backend-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/domain-schema-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/domain-schema-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dynamic-update-engine.main.iml" filepath="$PROJECT_DIR$/.idea/modules/dynamic-update-engine.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/gigapress.iml" filepath="$PROJECT_DIR$/.idea/gigapress.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mcp-server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/mcp-server.main.iml" />
+    </modules>
+  </component>
+</project>

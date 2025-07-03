@@ -1,0 +1,41 @@
+stages:
+  {% for stage in stages %}
+  - {{ stage }}
+  {% endfor %}
+
+{% if variables %}
+variables:
+  {% for key, value in variables.items() %}
+  {{ key }}: "{{ value }}"
+  {% endfor %}
+{% endif %}
+
+{% for job_name, job_config in jobs.items() %}
+{{ job_name }}:
+  stage: {{ job_config.stage }}
+  {% if job_config.get('image') %}
+  image: {{ job_config.image }}
+  {% endif %}
+  {% if job_config.get('before_script') %}
+  before_script:
+    {% for cmd in job_config.before_script %}
+    - {{ cmd }}
+    {% endfor %}
+  {% endif %}
+  script:
+    {% for cmd in job_config.script %}
+    - {{ cmd }}
+    {% endfor %}
+  {% if job_config.get('artifacts') %}
+  artifacts:
+    {% for key, value in job_config.artifacts.items() %}
+    {{ key }}: {{ value }}
+    {% endfor %}
+  {% endif %}
+  {% if job_config.get('only') %}
+  only:
+    {% for item in job_config.only %}
+    - {{ item }}
+    {% endfor %}
+  {% endif %}
+{% endfor %}

@@ -1,0 +1,31 @@
+# Terraform configuration
+terraform {
+  required_version = ">= 1.0"
+  
+  required_providers {
+    {% for provider in providers %}
+    {{ provider.name }} = {
+      source  = "hashicorp/{{ provider.name }}"
+      version = "{{ provider.version }}"
+    }
+    {% endfor %}
+  }
+}
+
+# Provider configuration
+{% for provider in providers %}
+provider "{{ provider.name }}" {
+  {% for key, value in provider.configuration.items() %}
+  {{ key }} = "{{ value }}"
+  {% endfor %}
+}
+{% endfor %}
+
+# Resources
+{% for resource in resources %}
+resource "{{ resource.type }}" "{{ resource.name }}" {
+  {% for key, value in resource.properties.items() %}
+  {{ key }} = {{ value | tojson }}
+  {% endfor %}
+}
+{% endfor %}

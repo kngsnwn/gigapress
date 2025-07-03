@@ -1,0 +1,12 @@
+# Variables definition
+{% for var in variables %}
+variable "{{ var.name }}" {
+  type        = {{ var.type }}
+  {% if var.default is defined %}
+  default     = {{ var.default | tojson }}
+  {% endif %}
+  {% if var.description %}
+  description = "{{ var.description }}"
+  {% endif %}
+}
+{% endfor %}

@@ -1,0 +1,70 @@
+# {{ project_name }}
+
+{{ description }}
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- Docker
+- Kubernetes (optional)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone <repository-url>
+
+# Install dependencies
+npm install
+
+# Run locally
+npm start
+```
+
+### Development
+
+```bash
+# Run in development mode
+npm run dev
+
+# Run tests
+npm test
+
+# Build for production
+npm run build
+```
+
+### Deployment
+
+```bash
+# Build Docker image
+docker build -t {{ project_name }} .
+
+# Run with Docker
+docker run -p 8080:8080 {{ project_name }}
+
+# Deploy to Kubernetes
+kubectl apply -f k8s/
+```
+
+## Project Structure
+
+```
+.
+├── src/              # Source code
+├── tests/            # Test files
+├── docker/           # Docker configuration
+├── k8s/              # Kubernetes manifests
+├── .github/          # GitHub Actions workflows
+└── README.md         # This file
+```
+
+## Contributing
+
+Please read CONTRIBUTING.md for details on our code of conduct and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the {{ license }} License - see the LICENSE file for details.

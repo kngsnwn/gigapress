@@ -1,0 +1,12 @@
+# Outputs definition
+{% for output in outputs %}
+output "{{ output.name }}" {
+  value       = {{ output.value }}
+  {% if output.description %}
+  description = "{{ output.description }}"
+  {% endif %}
+  {% if output.sensitive %}
+  sensitive   = {{ output.sensitive | lower }}
+  {% endif %}
+}
+{% endfor %}

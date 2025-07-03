@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  conversational-ai-engine:
+    build: ../../conversational-ai-engine
+    container_name: gigapress-conversational-ai-engine
+    ports:
+      - "8087:8087"
+    environment:
+      - REDIS_HOST=host.docker.internal
+      - KAFKA_BOOTSTRAP_SERVERS=host.docker.internal:9092
+      - MCP_SERVER_URL=http://host.docker.internal:8082
+    volumes:
+      - ./logs:/app/logs
+      - ./.env:/app/.env
+    networks:
+      - gigapress-network
+    depends_on:
+      - redis
+      - kafka
+    restart: unless-stopped
+
+networks:
+  gigapress-network:
+    external: true
+
+# Note: Redis and Kafka are already running from the main docker-compose.yml

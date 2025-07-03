@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  infra-version-control-service:
+    build: .
+    container_name: gigapress-infra-version-control
+    ports:
+      - "8086:8086"
+    environment:
+      - SERVICE_NAME=infra-version-control-service
+      - SERVICE_PORT=8086
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=redis123
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+    volumes:
+      - ./logs:/app/logs
+      - ./repositories:/app/repositories
+    depends_on:
+      - redis
+      - kafka
+    networks:
+      - gigapress-network
+
+networks:
+  gigapress-network:
+    external: true

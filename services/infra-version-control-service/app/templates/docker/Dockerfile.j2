@@ -1,0 +1,37 @@
+FROM {{ base_image }}
+
+WORKDIR {{ workdir }}
+
+{% if labels %}
+# Labels
+{% for key, value in labels.items() %}
+LABEL {{ key }}="{{ value }}"
+{% endfor %}
+{% endif %}
+
+{% if env_vars %}
+# Environment variables
+{% for key, value in env_vars.items() %}
+ENV {{ key }}={{ value }}
+{% endfor %}
+{% endif %}
+
+# Install dependencies and copy application
+{% for command in commands %}
+{{ command }}
+{% endfor %}
+
+{% if ports %}
+# Expose ports
+{% for port in ports %}
+EXPOSE {{ port }}
+{% endfor %}
+{% endif %}
+
+{% if entrypoint %}
+# Set entrypoint
+ENTRYPOINT {{ entrypoint | tojson }}
+{% else %}
+# Default command
+CMD ["node", "server.js"]
+{% endif %}
