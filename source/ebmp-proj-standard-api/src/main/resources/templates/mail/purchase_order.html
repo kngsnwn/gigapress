@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"
+  >
+  <title>EFS</title>
+</head>
+<body>
+<section data-v-b8abe04a="" style="font-family: &quot;맑은 고딕&quot;, &quot;malgun gothic&quot;;">
+<div
+    style="text-align: center; width: 800px; height: auto; margin: 3% auto 0px; border: 10px solid rgb(238, 238, 238); background: rgb(255, 255, 255);">
+    <div style="width: 90%; margin: 20px auto 0px;">
+      <table border="0" cellpadding="0" cellspacing="0"
+             style="border: 1px solid rgba(0, 0, 0, 0.08); margin-top: 10px; width: 100%; font-size: 13px;">
+        <colgroup>
+          <col width="10%">
+          <col width="10%">
+          <col width="30%">
+          <col width="10%">
+          <col width="10%">
+          <col width="30%">
+        </colgroup>
+        <tr>
+          <td colspan="6" style="padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08);">
+            <h1>발 주 서</h1>
+          </td>
+        </tr>
+        <tr>
+          <th colspan="2"
+              style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">발 주 번 호</th>
+          <td style="text-align: left; padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);"><span
+              th:text="${ordNo}"></span></td>
+          <th colspan="2"
+              style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">발 주 일 자</th>
+          <td style="text-align: left; padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08);"><span
+              th:text="${ordDt}"></span></td>
+        </tr>
+        <tr>
+          <th rowspan="6"
+              style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">공급회사</th>
+          <th style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">회사명</th>
+          <td style="text-align: left; padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);"><span
+              th:text="${supCmpyNm}"></span></td>
+          <th rowspan="6"
+              style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">발주회사</th>
+          <th style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">회사명</th>
+          <td style="text-align: left; padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08);"><span
+              th:text="${ordCmpyNm}"></span></td>
+        </tr>
+        <tr>
+          <th rowspan="2"
+              style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">주 소</th>
+          <td rowspan="2"
+              style="text-align: left; padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);"><span
+              th:text="${supCmpyAddr}"></span></td>
+          <th style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">주 소</th>
+          <td style="text-align: left; padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08);"><span
+              th:text="${ordCmpyAddr}"></span></td>
+        </tr>
+        <tr>
+          <th style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">대표이사</th>
+          <td style="text-align: left; padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08);"><span
+              th:text="${ordCmpyCeoNm}"></span></td>
+        </tr>
+        <tr>
+          <th style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">담당자</th>
+          <td style="text-align: left; padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);"><span
+              th:text="${supCmpyMngUnqUserNm}"></span></td>
+          <th style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">발주담당</th>
+          <td style="text-align: left; padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08);"><span
+              th:text="${ordCmpyMngUnqUserNm}"></span></td>
+        </tr>
+        <tr>
+          <th style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">TEL</th>
+          <td style="text-align: left; padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);"><span
+              th:text="${supCmpyMngUnqUserTelNo}"></span></td>
+          <th style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">TEL</th>
+          <td style="text-align: left; padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08);"><span
+              th:text="${ordCmpyMngUnqUserTelNo}"></span></td>
+        </tr>
+        <tr>
+          <th style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">FAX</th>
+          <td style="text-align: left; padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);"><span
+              th:text="${supCmpyMngUnqUserFaxNo}"></span></td>
+          <th style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">FAX</th>
+          <td style="text-align: left; padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08);"><span
+              th:text="${ordCmpyMngUnqUserFaxNo}"></span></td>
+        </tr>
+        <tr>
+          <td colspan="6" style="padding: 8px;">아래와 같이 발주하오니 납품하여 주시기 바랍니다.</td>
+        </tr>
+      </table>
+      <table border="0" cellpadding="0" cellspacing="0"
+             style="border: 1px solid rgba(0, 0, 0, 0.08); margin-top: 10px; width: 100%; font-size: 13px;">
+        <colgroup>
+          <col width="7%">
+          <col width="10%">
+          <col width="10%">
+          <col width="7%">
+          <col width="10%">
+        </colgroup>
+        <tr>
+          <th style="background-color: rgb(248, 249, 251); padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">품목</th>
+          <th style="background-color: rgb(248, 249, 251); padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">제품명</th>
+          <th style="background-color: rgb(248, 249, 251); padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">수량</th>
+          <th style="background-color: rgb(248, 249, 251); padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">단가</th>
+          <th style="background-color: rgb(248, 249, 251); padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">금액</th>
+        </tr>
+        <tr th:each="ordPurchaseOrderItem : ${ordPurchaseOrderItemList}">
+          <td th:text="${ordPurchaseOrderItem.itemNm}"
+              style="padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);"></td>
+          <td th:text="${ordPurchaseOrderItem.goodsNm}"
+              style="padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);"></td>
+          <td th:text="${ordPurchaseOrderItem.supCnt}"
+              style="padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08); text-align: right;"></td>
+          <td th:text="${ordPurchaseOrderItem.supPrice}"
+              style="text-align: right; padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);"></td>
+          <td th:text="${ordPurchaseOrderItem.supTotPrice}"
+              style="padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08); text-align: right;"></td>
+        </tr>
+        <tr>
+          <th style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">총 수량</th>
+          <td colspan="2"
+              style="padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08); text-align: right;"><span
+              th:text="${supTotCnt}"></span></td>
+          <th style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">합계</th>
+          <td style="padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08); text-align: right;"><span
+              th:text="${supAmount}"></span></td>
+        </tr>
+        <tr>
+          <td colspan="3"
+              style="text-align: left; padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">
+            <b>배송지 : </b><span th:text="${delvAddr}"></span>
+          </td>
+          <th style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">V.A.T</th>
+          <td style="padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08); text-align: right;"><span
+              th:text="${supVat}"></span></td>
+        </tr>
+        <tr>
+          <td colspan="3"
+              style="text-align: left; padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">
+            <b>수령인 : </b><span th:text="${recvNm}"></span>(<span th:text="${recvTelNo}"></span>)
+          </td>
+          <th style="background-color: rgb(248, 249, 251); border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08);">TOTAL</th>
+          <td style="padding: 8px; border-bottom: 1px solid rgba(0, 0, 0, 0.08); border-right: 1px solid rgba(0, 0, 0, 0.08); text-align: right;">
+            <b><span th:text="${supTotAmountWithComma}"></span></b>
+          </td>
+        </tr>
+        <tr>
+          <th style="background-color: rgb(248, 249, 251); padding: 8px; border-right: 1px solid rgba(0, 0, 0, 0.08);">특이사항</th>
+          <td colspan="4" style="text-align: left; padding: 8px;">1. 귀사의 견적서에 의거 상기와 같이 물품발주를 통보하오니 기일을 엄수하여 적기에 공급하여 주시기 바랍니다. <br> 2. 발주서에 대하여 문의사항 또는 이의 신청이 있을시 24시간 이내에 당사 발주처로 통보하여 주시기 바라며, 별도의 통보가 없을 경우 본 발주 내용에 따라 공급하는 것으로 간주합니다. </td>
+        </tr>
+        <tr></tr>
+      </table>
+    </div>
+  </div>
+</section>
+</body>
+</html>

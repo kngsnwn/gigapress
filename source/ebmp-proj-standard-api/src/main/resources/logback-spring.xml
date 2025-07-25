@@ -1,0 +1,47 @@
+<configuration scan="true" scanPeriod="180 seconds">
+
+  <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+
+  <property name="LOG_PATH" value="logs"/>
+  <property name="LOG_FILE_NAME" value="catalina"/>
+
+  <springprofile name="local">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <root level="INFO">
+      <appender-ref ref="console"/>
+    </root>
+  </springprofile>
+
+  <!-- Console Appender -->
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>[%-5level][%d{yyyy-MM-dd HH:mm:ss.SSS}] %logger.%method \(%class{0}.java:%line\) - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <!-- File Appender -->
+  <springprofile name="!local">
+    <appender-ref ref="console"/>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"> <!-- 파일경로 설정 -->
+      <file>${LOG_PATH}/${LOG_FILE_NAME}.out</file> <!-- 출력패턴 설정-->
+      <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <pattern>[%-5level][%d{yyyy-MM-dd HH:mm:ss.SSS}] %logger.%method \(%class{0}.java:%line\) - %msg%n</pattern>
+      </encoder>
+      <!-- Rolling 정책 -->
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.out</fileNamePattern>
+        <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP"> <!-- 파일당 최고 용량 kb, mb, gb -->
+          <maxFileSize>100MB</maxFileSize>
+        </timeBasedFileNamingAndTriggeringPolicy> <!-- 일자별 로그파일 최대 보관주기(~일), 해당 설정일 이상된 파일은 자동으로 제거-->
+        <maxHistory>30</maxHistory>
+      </rollingPolicy>
+    </appender>
+  </springprofile>
+
+  <root level="INFO">
+    <appender-ref ref="console"/>
+    <springprofile name="!local">
+      <appender-ref ref="FILE"/>
+    </springprofile>>
+  </root>
+</configuration>

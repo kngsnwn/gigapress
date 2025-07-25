@@ -1,0 +1,13 @@
+package common.config.swagger;
+
+public class SwaggerConstants {
+
+  public static final String DEFAULT_EXAMPLE_CBMP_LOGIN_TOKEN = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzYW4iOiJ1S3JLSWZwVTZUaXVoWnU3d1hJMllBPT0iLCJzdWIiOiJFQk1QIExvZ2luIFRva2VuIHYxLjAiLCJhdWQiOiJldG5lcnNybmRAZXRuZXJzLmNvbSIsIm5iZiI6MTU4ODczMDQ2MiwiY2NlIjoiTU5walZzZmhTZ2lScTdmTEJGSnRFQT09Iiwic2NkIjoiVS9oOGxDSUNNTjVMSzBZYUxwNVk3em9IdmxtWHhSbjRoVEh4bXBGRFR5SWl5SCtFZ3FueEg5bDd6YW1rcWJicnd3czErSlhycEhaOXFEaER0VmdOYkE9PSIsImJwZSI6IndoUEFvVXhEaDdFK3Y4MHJDV2xlb2c9PSIsImlzcyI6ImVibXAudjEuYXBpIiwidWF0IjoicGZnaUhXc1gvTlZWMFBia29pWE5BUT09IiwiZHB0IjoiK3duV0FacXpXVmYrTENocWtRVktZUT09IiwiZXhwIjoxNjIwMjY2NTIyLCJpYXQiOjE1ODg3MzA1MjJ9.4ss21luGgL4X0erbYrFkce_xCjZy02ItkkPDuCGigaMWeivbA57UmyhlG400VAoJn6r2Wljwm6NWPzzGFKfxAw";
+
+  public static final String[] SWAGGER_URI = {
+    "/swagger-ui.html"
+    , "/swagger-resources/configuration/security"
+    , "/swagger-resources"
+    , "/v2/api-docs"
+  };
+}

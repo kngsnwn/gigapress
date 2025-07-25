@@ -1,0 +1,8 @@
+${AnsiColor.BRIGHT_YELLOW}        ${AnsiColor.BLACK} _    ${AnsiColor.BRIGHT_YELLOW}                            ${AnsiColor.BLACK}                    _
+${AnsiColor.BRIGHT_YELLOW}   ___  ${AnsiColor.BLACK}| |_  ${AnsiColor.BRIGHT_YELLOW} _ __     ___   _ __   ___  ${AnsiColor.BLACK} _ __   _ __     __| |
+${AnsiColor.BRIGHT_YELLOW}  / _ \ ${AnsiColor.BLACK}| __| ${AnsiColor.BRIGHT_YELLOW}| '_ \   / _ \ | '__| / __| ${AnsiColor.BLACK}| '__| | '_ \   / _` |
+${AnsiColor.BRIGHT_YELLOW} |  __/ ${AnsiColor.BLACK}| |_  ${AnsiColor.BRIGHT_YELLOW}| | | | |  __/ | |    \__ \ ${AnsiColor.BLACK}| |    | | | | | (_| |
+${AnsiColor.BRIGHT_YELLOW}  \___| ${AnsiColor.BLACK} \__| ${AnsiColor.BRIGHT_YELLOW}|_| |_|  \___| |_|    |___/ ${AnsiColor.BLACK}|_|    |_| |_|  \__,_|
+${AnsiStyle.NORMAL}
+${server.title} ${server.version}
+:: Spring Boot ${spring-boot.version} ::
