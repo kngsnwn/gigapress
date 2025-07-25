@@ -23,8 +23,10 @@ interface ConversationStore {
   // UI State
   isConnected: boolean;
   isTyping: boolean;
+  isDemoMode: boolean;
   setIsConnected: (connected: boolean) => void;
   setIsTyping: (typing: boolean) => void;
+  setIsDemoMode: (demo: boolean) => void;
 }
 
 export const useConversationStore = create<ConversationStore>((set) => ({
@@ -68,6 +70,8 @@ export const useConversationStore = create<ConversationStore>((set) => ({
   // UI State
   isConnected: false,
   isTyping: false,
+  isDemoMode: true,
   setIsConnected: (connected) => set({ isConnected: connected }),
   setIsTyping: (typing) => set({ isTyping: typing }),
+  setIsDemoMode: (demo) => set({ isDemoMode: demo }),
 }));

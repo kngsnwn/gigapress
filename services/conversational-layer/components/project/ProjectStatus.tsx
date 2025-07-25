@@ -1,6 +1,7 @@
 'use client'
 
 import { useConversationStore } from '@/lib/store';
+import { useRouter } from 'next/navigation';
 import { 
   Code2, 
   Database, 
@@ -10,12 +11,14 @@ import {
   CheckCircle,
   AlertCircle,
   Clock,
-  Loader2
+  Loader2,
+  ExternalLink
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function ProjectStatus() {
   const currentProject = useConversationStore((state) => state.currentProject);
+  const router = useRouter();
 
   if (!currentProject) {
     return (
@@ -56,6 +59,13 @@ export default function ProjectStatus() {
           <span>Type: {currentProject.type}</span>
           <span>Version: {currentProject.version}</span>
         </div>
+        <button 
+          onClick={() => router.push(`/project/${currentProject.id}`)}
+          className="flex items-center gap-1 text-xs text-primary hover:underline"
+        >
+          View more details
+          <ExternalLink size={12} />
+        </button>
       </div>
 
       {/* Components Status */}
@@ -63,7 +73,7 @@ export default function ProjectStatus() {
         <h4 className="text-sm font-medium">Components</h4>
         <div className="space-y-2">
           {components.map(({ icon: Icon, label, key }) => {
-            const hasComponent = currentProject.architecture?.[key];
+            const hasComponent = currentProject.architecture?.[key as keyof typeof currentProject.architecture];
             return (
               <div
                 key={key}
@@ -83,38 +93,14 @@ export default function ProjectStatus() {
         </div>
       </div>
 
-      {/* Architecture Details */}
-      {currentProject.architecture && (
-        <div className="space-y-3">
-          <h4 className="text-sm font-medium">Architecture Details</h4>
-          <div className="space-y-2 text-sm">
-            {currentProject.architecture.frontend && (
-              <div>
-                <span className="font-medium">Frontend:</span>{' '}
-                <span className="text-muted-foreground">
-                  {currentProject.architecture.frontend.framework}
-                </span>
-              </div>
-            )}
-            {currentProject.architecture.backend && (
-              <div>
-                <span className="font-medium">Backend:</span>{' '}
-                <span className="text-muted-foreground">
-                  {currentProject.architecture.backend.framework}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
-      {/* Action Buttons */}
+      {/* Quick Actions */}
       <div className="space-y-2">
-        <button className="w-full p-2 text-sm rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
-          View Code
-        </button>
-        <button className="w-full p-2 text-sm rounded-lg border border-border hover:bg-accent transition-colors">
-          Download Project
+        <button 
+          onClick={() => router.push(`/project/${currentProject.id}`)}
+          className="w-full p-2 text-sm rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+        >
+          Open Project Details
         </button>
       </div>
     </div>

@@ -17,7 +17,9 @@ export interface Project {
   architecture?: {
     frontend?: any;
     backend?: any;
+    database?: any;
     infrastructure?: any;
+    vcs?: any;
   };
 }
 

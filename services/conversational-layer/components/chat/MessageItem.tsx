@@ -52,9 +52,10 @@ export default function MessageItem({ message }: MessageItemProps) {
           
           <ReactMarkdown
             components={{
-              code({ node, inline, className, children, ...props }) {
+              code({ node, className, children, ...props }: any) {
                 const match = /language-(\w+)/.exec(className || '');
-                return !inline && match ? (
+                const isInline = !className || !match;
+                return !isInline && match ? (
                   <SyntaxHighlighter
                     style={vscDarkPlus}
                     language={match[1]}

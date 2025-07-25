@@ -49,7 +49,7 @@ export default function InputBox() {
 
   const toggleRecording = () => {
     setIsRecording(!isRecording);
-    toast.info(isRecording ? 'Recording stopped' : 'Recording started');
+    toast(isRecording ? 'Recording stopped' : 'Recording started');
   };
 
   return (
@@ -75,7 +75,7 @@ export default function InputBox() {
         {/* Attachment button */}
         <button
           className="absolute right-2 bottom-2 p-1.5 rounded hover:bg-accent transition-colors"
-          onClick={() => toast.info('File attachment coming soon!')}
+          onClick={() => toast('File attachment coming soon!')}
           disabled={!isConnected}
         >
           <Paperclip size={18} className="text-muted-foreground" />

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { websocketService } from '@/lib/websocket';
 import { useIsMobile } from '@/lib/hooks/useMediaQuery';
@@ -9,26 +9,38 @@ import ChatInterfaceMobile from '@/components/chat/ChatInterfaceMobile';
 import ProjectSidebar from '@/components/project/ProjectSidebar';
 import Header from '@/components/layout/Header';
 import Loading from '@/components/ui/Loading';
+import ModeSelector from '@/components/ModeSelector';
 import { fadeIn } from '@/lib/animations';
 import { useConversationStore } from '@/lib/store';
 
 export default function Home() {
   const isMobile = useIsMobile();
   const isConnected = useConversationStore((state) => state.isConnected);
+  const isDemoMode = useConversationStore((state) => state.isDemoMode);
+  const [showModeSelector, setShowModeSelector] = useState(true);
 
   useEffect(() => {
-    // Connect to WebSocket on mount
-    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:8087';
-    websocketService.connect(wsUrl);
+    // Only connect to WebSocket if not in demo mode
+    if (!isDemoMode && !showModeSelector) {
+      const wsUrl = process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:8087';
+      websocketService.connect(wsUrl);
+    }
 
     // Cleanup on unmount
     return () => {
-      websocketService.disconnect();
+      if (!isDemoMode) {
+        websocketService.disconnect();
+      }
     };
-  }, []);
+  }, [isDemoMode, showModeSelector]);
 
-  // Show loading screen while connecting
-  if (!isConnected && !isMobile) {
+  // Show mode selector first
+  if (showModeSelector) {
+    return <ModeSelector onClose={() => setShowModeSelector(false)} />;
+  }
+
+  // Show loading screen while connecting (only in real mode)
+  if (!isDemoMode && !isConnected && !isMobile) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loading size="lg" text="Connecting to GigaPress..." />

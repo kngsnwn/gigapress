@@ -2,6 +2,7 @@
 
 import { useTheme } from 'next-themes';
 import { useConversationStore } from '@/lib/store';
+import { demoProjects, demoMessages, demoProgressUpdates } from '@/lib/demoData';
 import { 
   Sun, 
   Moon, 
@@ -9,13 +10,53 @@ import {
   HelpCircle, 
   Wifi, 
   WifiOff,
-  Sparkles
+  Sparkles,
+  Laptop,
+  ToggleLeft,
+  ToggleRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
-  const isConnected = useConversationStore((state) => state.isConnected);
+  const { 
+    isConnected, 
+    isDemoMode, 
+    setIsDemoMode,
+    setCurrentProject,
+    addMessage,
+    addProgressUpdate,
+    clearMessages,
+    clearProgress,
+    addProject
+  } = useConversationStore();
+
+  const toggleMode = () => {
+    const newMode = !isDemoMode;
+    setIsDemoMode(newMode);
+    
+    if (newMode) {
+      // Switch to demo mode
+      clearMessages();
+      clearProgress();
+      
+      // Add demo data
+      demoProjects.forEach(project => addProject(project));
+      demoMessages.forEach(msg => addMessage(msg));
+      demoProgressUpdates.forEach(update => addProgressUpdate(update));
+      setCurrentProject(demoProjects[0]);
+    } else {
+      // Switch to real mode
+      clearMessages();
+      clearProgress();
+      setCurrentProject(null);
+      
+      // Reconnect WebSocket
+      if (typeof window !== 'undefined') {
+        window.location.reload();
+      }
+    }
+  };
 
   return (
     <header className="flex items-center justify-between px-6 py-4 border-b border-border bg-card">
@@ -32,20 +73,43 @@ export default function Header() {
 
       {/* Actions */}
       <div className="flex items-center gap-2">
-        {/* Connection Status */}
-        <div
-          className={cn(
-            'flex items-center gap-2 px-3 py-1.5 rounded-full text-sm',
-            isConnected
-              ? 'bg-green-500/10 text-green-600 dark:text-green-400'
-              : 'bg-destructive/10 text-destructive'
-          )}
+        {/* Mode Toggle */}
+        <button
+          onClick={toggleMode}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm bg-muted hover:bg-accent transition-colors"
+          title={isDemoMode ? 'Switch to Real Mode' : 'Switch to Demo Mode'}
         >
-          {isConnected ? <Wifi size={16} /> : <WifiOff size={16} />}
-          <span className="font-medium">
-            {isConnected ? 'Connected' : 'Disconnected'}
-          </span>
-        </div>
+          {isDemoMode ? (
+            <>
+              <Laptop size={16} />
+              <span className="font-medium">Demo Mode</span>
+              <ToggleLeft size={20} className="text-muted-foreground" />
+            </>
+          ) : (
+            <>
+              <Wifi size={16} className="text-green-500" />
+              <span className="font-medium">Real Mode</span>
+              <ToggleRight size={20} className="text-primary" />
+            </>
+          )}
+        </button>
+
+        {/* Connection Status (only show in real mode) */}
+        {!isDemoMode && (
+          <div
+            className={cn(
+              'flex items-center gap-2 px-3 py-1.5 rounded-full text-sm',
+              isConnected
+                ? 'bg-green-500/10 text-green-600 dark:text-green-400'
+                : 'bg-destructive/10 text-destructive'
+            )}
+          >
+            {isConnected ? <Wifi size={16} /> : <WifiOff size={16} />}
+            <span className="font-medium">
+              {isConnected ? 'Connected' : 'Disconnected'}
+            </span>
+          </div>
+        )}
 
         {/* Theme Toggle */}
         <button

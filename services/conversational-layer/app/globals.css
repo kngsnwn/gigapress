@@ -57,3 +57,55 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  @keyframes flow-dot {
+    0% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    10% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    90% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 20px 10px rgba(59, 130, 246, 0.3);
+    }
+  }
+
+  .flow-dot {
+    animation: flow-dot 2s ease-in-out;
+  }
+
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes data-flow-line {
+    0% {
+      stroke-dashoffset: 100;
+    }
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .data-flow-line {
+    stroke-dasharray: 5 5;
+    animation: data-flow-line 1.5s linear infinite;
+  }
+}
